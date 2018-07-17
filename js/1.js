@@ -31,6 +31,8 @@ newGameButton.onclick = e => {
 	Object.values(cells).forEach(cell => {
 		cell.classList.remove("box-filled-1");
 		cell.classList.remove("box-filled-2");
+		cell.classList.remove("box-hover-1");
+		cell.classList.remove("box-hover-2");
 	})
 };
 
@@ -52,6 +54,36 @@ const checkLine = line => {
 	}
 }
 
+grid.addEventListener("mouseover", e => {
+	if ( e.target.classList.value.includes("box") && 
+		! e.target.classList.value.includes("box-filled-1") &&
+		! e.target.classList.value.includes("box-filled-2")
+		) {
+		if ( player1.classList.value.includes("active") ) {
+			e.target.classList.add("box-hover-1");
+			let left = e.relatedTarget;
+			left.classList.remove("box-hover-1");
+		} else {
+			e.target.classList.add("box-hover-2");
+			let left = e.relatedTarget;
+			left.classList.remove("box-hover-2");
+		}
+	}
+})
+
+grid.addEventListener("mouseout", e => {
+	if ( e.target.classList.value.includes("box") && 
+		(e.target.classList.value.includes("box-hover-1") ||
+		e.target.classList.value.includes("box-hover-2"))
+		) {
+		if ( player1.classList.value.includes("active") ) {
+			e.target.classList.remove("box-hover-1");
+		} else {
+			e.target.classList.remove("box-hover-2");
+		}
+	}
+})
+
 grid.onclick = e => {
 	if ( e.target.classList.value.includes("box") && 
 		! e.target.classList.value.includes("box-filled-1") &&
@@ -59,10 +91,12 @@ grid.onclick = e => {
 		) {
 		if ( player1.classList.value.includes("active") ) {
 			e.target.classList.add("box-filled-1");
+			e.target.classList.remove("box-hover-1");
 			player1.classList.remove("active");
 			player2.classList.add("active");
 		} else {
 			e.target.classList.add("box-filled-2");
+			e.target.classList.remove("box-hover-2");
 			player2.classList.remove("active");
 			player1.classList.add("active");
 		}
